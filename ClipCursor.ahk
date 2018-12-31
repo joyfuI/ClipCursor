@@ -25,13 +25,13 @@ if ErrorLevel = 0	; 레지스트리가 있고
 	if reg = %A_ScriptFullPath%	; 그 값이 이 파일이라면
 		Menu,Tray,Check,부팅시 자동 실행	; 트레이 메뉴 체크
 SetTimer,마우스가두기,on	; 마우스 가두기 반복 실행
+Hotkey, Pause, 토글	; Pause키에 단축키 지정
 Return
 
 토글:
 Menu,Tray,ToggleCheck,동작
 If toggle = on
 {
-	Suspend on
 	SetTimer,마우스가두기,off
 	DllCall("ClipCursor","int",0)
 	toggle = off
@@ -39,7 +39,6 @@ If toggle = on
 }
 If toggle = off
 {
-	Suspend off
 	SetTimer,마우스가두기,on
 	toggle = on
 	Return
