@@ -46,6 +46,7 @@ TrayTip(text)	; 트레이 메시지 띄우는 함수
 {
 	TrayTip	; 이전 메시지는 지우고
 	TrayTip, , %text%
+	Return
 }
 
 Menu, Tray, NoStandard	; 트레이 기본메뉴 제거
