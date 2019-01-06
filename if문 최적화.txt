@@ -1,0 +1,106 @@
+	If (menuName = "hotkey")	; 단축키로 실행 시
+	{
+		If (itemPos = 0)	; 해제 단축키면
+		{
+			If (toggle != "")	; 이미 가두기 상태일 때만
+			{
+				Menu, Tray, Uncheck, %toggle%	; 기존 체크표시 해제
+				SetTimer, %timer%, Delete	; 마우스 가두기 off
+				DllCall("ClipCursor", "Int", 0)
+				toggle := ""
+				TrayTip("마우스 가두기 off")
+			}
+		}
+		Else	; 가두기 단축키면
+		{
+			If (toggle != itemName)	; 이미 가둔 모니터 말고
+			{
+				If (toggle != "")	; 이미 가두기 상태일 때만
+				{
+					Menu, Tray, Uncheck, %toggle%	; 기존 체크표시 해제
+					SetTimer, %timer%, Delete	; 마우스 가두기 off
+					DllCall("ClipCursor", "Int", 0)
+				}
+				Menu, Tray, Check, %itemName%
+				SysGet, monitor, Monitor, %itemPos%
+				timer := Func("ClipCursor").Bind(monitorLeft, monitorTop, monitorRight, monitorBottom)	; 해상도 크기만큼 마우스 가두기
+				SetTimer, %timer%, On	; 마우스 가두기 on
+				toggle := itemName
+				TrayTip(itemName . "`n마우스 가두기 on")
+			}
+		}
+	}
+	Else	; 트레이 메뉴로 실행 시
+	{
+		If (toggle != "")	; 이미 가두기 상태일 때만
+		{
+			Menu, Tray, Uncheck, %toggle%	; 기존 체크표시 해제
+			SetTimer, %timer%, Delete	; 마우스 가두기 off
+			DllCall("ClipCursor", "Int", 0)
+		}
+		If (toggle = itemName)	; 체크해제 시
+		{
+			toggle := ""
+			TrayTip("마우스 가두기 off")
+		}
+		Else	; 체크 시
+		{
+			Menu, Tray, Check, %itemName%
+			SysGet, monitor, Monitor, %itemPos%
+			timer := Func("ClipCursor").Bind(monitorLeft, monitorTop, monitorRight, monitorBottom)	; 해상도 크기만큼 마우스 가두기
+			SetTimer, %timer%, On	; 마우스 가두기 on
+			toggle := itemName
+			TrayTip(itemName . "`n마우스 가두기 on")
+		}
+	}
+
+
+
+If (menuName = "hotkey" && itemPos = 0 && toggle != "")
+If (menuName = "hotkey" && itemPos != 0 && toggle != itemName && toggle != "")
+If (menuName != "hotkey" && toggle != "")
+; (a x b x c') + (a x b' x d' x c') + (a' x c')
+; ((a x b) + (a x b' x d') + a') x c'
+; ((a x (b + (b' x d'))) + a') x c'
+; ((a x ((b + b') x (b + d'))) + a') x c'
+; ((a x (1 x (b + d'))) + a') x c'
+; ((a x (b + d')) + a') x c'
+; ((a + a') x ((b + d') + a')) x c'
+; (1 x ((b + d') + a')) x c'
+; ((b + d') + a') x c'
+; c' x (a' + b + d')
+{
+	Menu, Tray, Uncheck, %toggle%	; 기존 체크표시 해제
+	SetTimer, %timer%, Delete	; 마우스 가두기 off
+	DllCall("ClipCursor", "Int", 0)
+}
+
+If (menuName = "hotkey" && itemPos = 0 && toggle != "")
+If (menuName != "hotkey" && toggle = itemName)
+; (a x b x c') + (a' x d)
+{
+	toggle := ""
+	TrayTip("마우스 가두기 off")
+}
+
+If (menuName = "hotkey" && itemPos != 0 && toggle != itemName)
+If (menuName != "hotkey" && toggle != itemName)
+; (a x b' x d') + (a' x d')
+; ((a x b') + a') x d'
+; ((a + a') x (b' + a')) x d'
+; (1 x (b' + a')) x d'
+; (b' + a') x d'
+; d' x (a' + b')
+{
+	SysGet, monitor, Monitor, %ItemPos%
+	timer := Func("ClipCursor").Bind(monitorLeft, monitorTop, monitorRight, monitorBottom)	; 해상도 크기만큼 마우스 가두기
+	SetTimer, %timer%, On	; 마우스 가두기 on
+	toggle := ItemName
+	TrayTip(ItemName . "`n마우스 가두기 on")
+	Menu, Tray, Check, %ItemName%
+}
+
+a	menuName = "hotkey"
+b	itemPos = 0
+c	toggle = ""
+d	toggle = itemName

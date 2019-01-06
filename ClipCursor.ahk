@@ -12,31 +12,32 @@ ClipCursor(x1, y1, x2, y2)	; 마우스 가두는 함수
 	Return
 }
 
-Monitor(ItemName, ItemPos, MenuName)
+Monitor(itemName, itemPos, menuName)
 {
 	static toggle := ""	; 마우스 가두기 상태인 모니터 이름. 빈 문자열은 해제 상태
 	static timer	; 작동 중인 타이머
-	ItemPos -= 1	; 모니터 번호. 트레이 메뉴가 위에 하나 더 있기 때문에 1을 뺌
+	itemPos -= 1	; 모니터 번호. 트레이 메뉴가 위에 하나 더 있기 때문에 1을 뺌
 
-	If (toggle != "" && (MenuName != "hotkey" || (ItemPos = 0 || toggle != ItemName)))
+	If (toggle != "" && (menuName != "hotkey" || itemPos = 0 || toggle != itemName))
 	{
 		Menu, Tray, Uncheck, %toggle%	; 기존 체크표시 해제
 		SetTimer, %timer%, Delete	; 마우스 가두기 off
 		DllCall("ClipCursor", "Int", 0)
 	}
-	If ((MenuName = "hotkey" && ItemPos = 0 && toggle != "") || (MenuName != "hotkey" && toggle = ItemName))
+	If ((menuName = "hotkey" && itemPos = 0 && toggle != "") || (menuName != "hotkey" && toggle = itemName))
 	{
 		toggle := ""
 		TrayTip("마우스 가두기 off")
+		Return	; 밑 if 문과 중복이라 추가
 	}
-	If (toggle != ItemName && (MenuName != "hotkey" || ItemPos != 0))
+	If (toggle != itemName && (menuName != "hotkey" || itemPos != 0))
 	{
-		SysGet, monitor, Monitor, %ItemPos%
+		Menu, Tray, Check, %itemName%
+		SysGet, monitor, Monitor, %itemPos%
 		timer := Func("ClipCursor").Bind(monitorLeft, monitorTop, monitorRight, monitorBottom)	; 해상도 크기만큼 마우스 가두기
 		SetTimer, %timer%, On	; 마우스 가두기 on
-		toggle := ItemName
-		TrayTip(ItemName . "`n마우스 가두기 on")
-		Menu, Tray, Check, %ItemName%
+		toggle := itemName
+		TrayTip(itemName . "`n마우스 가두기 on")
 	}
 	Return
 }
