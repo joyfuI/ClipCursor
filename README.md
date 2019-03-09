@@ -9,6 +9,8 @@
 ### 단축키
 * **Win + Ctrl + 모니터번호** - 마우스 가두기 on
 * **Win + Ctrl + 0** - 마우스 가두기 off
+## 다운로드
+[Releases](https://github.com/joyfuI/ClipCursor/releases)
 ## 참고
 * 마우스 가두기 스크립트: <http://autohotkey.co.kr/b/1-1194>
 * 아이콘: <http://www.iconarchive.com/show/windows-8-icons-by-icons8/Very-Basic-Cursor-icon.html>
